@@ -6,12 +6,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, MainTabParamList } from '../types';
+import { WebPlatformNotice } from '../components/WebPlatformNotice';
 import { Colors, Spacing, BorderRadius, FontSizes } from '../constants/colors';
 
 type HomeScreenNavigationProp = CompositeNavigationProp<
@@ -27,6 +29,11 @@ const { width } = Dimensions.get('window');
 const cardWidth = (width - Spacing.lg * 3) / 2;
 
 export default function HomeScreen({ navigation }: Props) {
+  // Show platform notice on web
+  if (Platform.OS === 'web') {
+    return <WebPlatformNotice />;
+  }
+
   const features = [
     {
       icon: 'images' as const,

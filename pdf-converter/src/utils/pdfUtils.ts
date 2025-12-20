@@ -1,13 +1,23 @@
+import { Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { ImageFile } from '../types';
+
+// Check if FileSystem is available (not available on web)
+const isFileSystemAvailable = () => {
+  return Platform.OS !== 'web' && FileSystem.documentDirectory !== undefined;
+};
 
 export const generatePDFFromImages = async (
   images: ImageFile[],
   fileName: string
 ): Promise<string> => {
   try {
+    if (!isFileSystemAvailable()) {
+      throw new Error('PDF generation is not supported on web platform. Please use the native app (iOS/Android).');
+    }
+
     // Convert images to base64 using legacy API
     const imagePromises = images.map(async (image) => {
       const base64 = await FileSystem.readAsStringAsync(image.uri, {
@@ -93,6 +103,10 @@ export const mergePDFs = async (
   outputName: string
 ): Promise<string> => {
   try {
+    if (!isFileSystemAvailable()) {
+      throw new Error('PDF merging is not supported on web platform. Please use the native app (iOS/Android).');
+    }
+
     // Note: True PDF merging requires native modules
     // For this implementation, we'll create a combined PDF reference
     const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
@@ -118,6 +132,10 @@ export const mergePDFs = async (
 
 export const sharePDF = async (uri: string): Promise<void> => {
   try {
+    if (Platform.OS === 'web') {
+      throw new Error('PDF sharing is not supported on web platform. Please use the native app (iOS/Android).');
+    }
+
     const isAvailable = await Sharing.isAvailableAsync();
     if (isAvailable) {
       await Sharing.shareAsync(uri);
@@ -132,6 +150,10 @@ export const sharePDF = async (uri: string): Promise<void> => {
 
 export const deletePDF = async (uri: string): Promise<void> => {
   try {
+    if (!isFileSystemAvailable()) {
+      throw new Error('PDF deletion is not supported on web platform. Please use the native app (iOS/Android).');
+    }
+
     await FileSystem.deleteAsync(uri);
   } catch (error) {
     console.error('Error deleting PDF:', error);

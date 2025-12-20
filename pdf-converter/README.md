@@ -39,6 +39,8 @@ Before you begin, ensure you have the following installed:
 - For iOS development: macOS with Xcode
 - For Android development: Android Studio
 
+> **⚠️ Important**: This app requires native mobile features (file system, camera, gallery) and is **designed for iOS and Android**. The web version shows a platform notice as these features are not available in browsers.
+
 ## 🛠️ Installation
 
 1. **Clone the repository** (or navigate to the project directory):
@@ -92,6 +94,8 @@ npm run android
 ```bash
 npm run web
 ```
+
+> **Note**: The web version has limited functionality as it lacks native features (file system, camera, gallery). It displays an informative notice explaining these limitations. For full app functionality, use iOS or Android.
 
 ## 📂 Project Structure
 
@@ -229,6 +233,12 @@ eas build --platform ios
 
 **Issue**: App crashes on startup
 - **Solution**: Clear the cache with `expo start -c`
+
+**Issue**: App shows "Limited Web Support" notice
+- **Solution**: This is expected! The app requires native features (file system, camera, gallery) that browsers don't support. Use the mobile app (iOS/Android) via Expo Go or a native build for full functionality.
+
+**Issue**: "UnavailabilityError" on web
+- **Solution**: This has been fixed! The app now shows a friendly notice on web instead of crashing. Use the mobile version for all features.
 
 ### Clearing Cache
 

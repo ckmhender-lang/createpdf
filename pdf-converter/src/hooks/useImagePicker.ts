@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageFile } from '../types';
 
@@ -7,6 +8,11 @@ export const useImagePicker = () => {
 
   const pickImages = async () => {
     try {
+      // Check if running on web
+      if (Platform.OS === 'web') {
+        throw new Error('Image picking is limited on web. Please use the native app (iOS/Android) for full functionality.');
+      }
+
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       
       if (status !== 'granted') {
@@ -38,6 +44,11 @@ export const useImagePicker = () => {
 
   const takePhoto = async () => {
     try {
+      // Check if running on web
+      if (Platform.OS === 'web') {
+        throw new Error('Camera access is not available on web. Please use the native app (iOS/Android).');
+      }
+
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       
       if (status !== 'granted') {

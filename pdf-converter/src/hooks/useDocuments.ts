@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { PDFDocument } from '../types';
+
+// Check if FileSystem is available (not available on web)
+const isFileSystemAvailable = () => {
+  return Platform.OS !== 'web' && FileSystem.documentDirectory !== undefined;
+};
 
 export const useDocuments = () => {
   const [documents, setDocuments] = useState<PDFDocument[]>([]);
@@ -9,6 +15,14 @@ export const useDocuments = () => {
   const loadDocuments = async () => {
     try {
       setLoading(true);
+      
+      if (!isFileSystemAvailable()) {
+        // On web, show empty state
+        console.log('Document management is not available on web platform');
+        setDocuments([]);
+        return;
+      }
+
       const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
       
       // Create directory if it doesn't exist
