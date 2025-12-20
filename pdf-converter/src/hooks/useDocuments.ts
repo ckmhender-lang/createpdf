@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { PDFDocument } from '../types';
-
-// Type assertion for documentDirectory (available at runtime)
-const DOCUMENT_DIRECTORY = (FileSystem as any).documentDirectory || '';
 
 export const useDocuments = () => {
   const [documents, setDocuments] = useState<PDFDocument[]>([]);
@@ -12,7 +9,7 @@ export const useDocuments = () => {
   const loadDocuments = async () => {
     try {
       setLoading(true);
-      const pdfDir = `${DOCUMENT_DIRECTORY}pdfs/`;
+      const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
       
       // Create directory if it doesn't exist
       const dirInfo = await FileSystem.getInfoAsync(pdfDir);

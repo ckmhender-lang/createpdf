@@ -1,21 +1,17 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { ImageFile } from '../types';
-
-// Type assertions for runtime-available properties
-const DOCUMENT_DIRECTORY = (FileSystem as any).documentDirectory || '';
-const ENCODING_BASE64 = 'base64' as const;
 
 export const generatePDFFromImages = async (
   images: ImageFile[],
   fileName: string
 ): Promise<string> => {
   try {
-    // Convert images to base64
+    // Convert images to base64 using legacy API
     const imagePromises = images.map(async (image) => {
       const base64 = await FileSystem.readAsStringAsync(image.uri, {
-        encoding: ENCODING_BASE64,
+        encoding: FileSystem.EncodingType.Base64,
       });
       return `data:image/jpeg;base64,${base64}`;
     });
@@ -75,8 +71,8 @@ export const generatePDFFromImages = async (
       base64: false,
     });
 
-    // Move to permanent location
-    const pdfDir = `${DOCUMENT_DIRECTORY}pdfs/`;
+    // Create directory and move to permanent location using legacy API
+    const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
     await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true });
     
     const newUri = `${pdfDir}${fileName}.pdf`;
@@ -99,7 +95,7 @@ export const mergePDFs = async (
   try {
     // Note: True PDF merging requires native modules
     // For this implementation, we'll create a combined PDF reference
-    const pdfDir = `${DOCUMENT_DIRECTORY}pdfs/`;
+    const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
     await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true });
     
     // For a basic implementation, we'll just copy the first PDF
