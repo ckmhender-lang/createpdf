@@ -21,9 +21,8 @@ export const useImagePicker = () => {
 
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsMultipleSelection: true,
+        allowsMultipleSelection: Platform.OS !== 'ios', // iOS doesn't support this option reliably
         quality: 1,
-        selectionLimit: 10,
       });
 
       if (!result.canceled && result.assets) {
