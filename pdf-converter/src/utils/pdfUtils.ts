@@ -75,15 +75,15 @@ export const generatePDFFromImages = async (
       </html>
     `;
 
-    // Generate PDF
+    // Generate PDF with explicit boolean type
     const { uri } = await Print.printToFileAsync({
       html: htmlContent,
-      base64: false,
+      base64: false as boolean,
     });
 
     // Create directory and move to permanent location using legacy API
     const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
-    await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true });
+    await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true as boolean });
     
     const newUri = `${pdfDir}${fileName}.pdf`;
     await FileSystem.moveAsync({
@@ -110,7 +110,7 @@ export const mergePDFs = async (
     // Note: True PDF merging requires native modules
     // For this implementation, we'll create a combined PDF reference
     const pdfDir = `${FileSystem.documentDirectory}pdfs/`;
-    await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true });
+    await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true as boolean });
     
     // For a basic implementation, we'll just copy the first PDF
     // In production, you'd use a native PDF library like react-native-pdf-lib

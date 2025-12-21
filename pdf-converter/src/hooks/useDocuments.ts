@@ -28,7 +28,7 @@ export const useDocuments = () => {
       // Create directory if it doesn't exist
       const dirInfo = await FileSystem.getInfoAsync(pdfDir);
       if (!dirInfo.exists) {
-        await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true });
+        await FileSystem.makeDirectoryAsync(pdfDir, { intermediates: true as boolean });
         setDocuments([]);
         return;
       }
